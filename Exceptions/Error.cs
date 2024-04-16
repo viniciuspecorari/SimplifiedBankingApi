@@ -1,6 +1,6 @@
 ﻿namespace SimplifiedBankingApi.Exceptions
 {
-    public class Error
+    public class Error : ApplicationException
     {
         public string StatusCode { get; set; }
         public string Message { get; set; }

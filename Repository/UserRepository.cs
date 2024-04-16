@@ -1,4 +1,5 @@
-﻿using SimplifiedBankingApi.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using SimplifiedBankingApi.Contracts;
 using SimplifiedBankingApi.Data;
 using SimplifiedBankingApi.Models;
 using SimplifiedBankingApi.Models.Dto;
@@ -28,6 +29,23 @@ namespace SimplifiedBankingApi.Repository
 
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserLoginDto> GetByEmail(string email)
+        {
+            var user = _context.Users.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
+
+            var login = new UserLoginDto(user.Id, user.Email, user.Password, user.Type);
+
+            return login;
+        }
+
+        public async Task<IEnumerable<UserDto>> Get()
+        {
+            var users = await _context.Users
+            .Select(x => new UserDto(x.CompleteName, x.Document, x.Email, x.Password, x.Type)).ToListAsync();            
+
+            return users;
         }
     }
 }

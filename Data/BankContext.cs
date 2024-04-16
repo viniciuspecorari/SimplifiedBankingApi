@@ -37,7 +37,12 @@ namespace SimplifiedBankingApi.Data
             modelBuilder.Entity<Transaction>()
                 .HasOne(f => f.Wallet)
                 .WithMany(u => u.Transactions)
-                .HasForeignKey(f => f.WalletId);
+                .HasForeignKey(f => f.PayerWalletId);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(f => f.Wallet)
+                .WithMany(u => u.Transactions)
+                .HasForeignKey(f => f.PayeeWalletId);
         }
     }
 }
