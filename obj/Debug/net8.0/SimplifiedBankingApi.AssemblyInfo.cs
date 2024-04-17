@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplifiedBankingApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50942f07d312f4bf9d0dd143223c2d405b53555d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5bd200f12fd31fd3b13867c486551f7a3b974b14")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplifiedBankingApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplifiedBankingApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

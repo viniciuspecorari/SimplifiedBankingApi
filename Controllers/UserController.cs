@@ -13,27 +13,27 @@ namespace SimplifiedBankingApi.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthRepository _authRepository;
+        private readonly IWalletRepository _walletRepository;
 
-        public UserController(IUserRepository userRepository, IAuthRepository authRepository)
+        public UserController(IUserRepository userRepository, IAuthRepository authRepository, IWalletRepository walletRepository)
         {
             _userRepository = userRepository;
             _authRepository = authRepository;
+            _walletRepository = walletRepository;
 
         }
-
-        //[Authorize]
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<UserDto>>> Get()
-        //{                               
-        //    var users = await _userRepository.Get();
-            
-        //    return Ok(users);
-        //}
         
         [HttpPost]
+        [Route("/api/register")]
         public async Task<IActionResult> Add(UserDto userDto)
         {
             await _userRepository.Add(userDto);
+
+            var user = await _userRepository.GetByEmail(userDto.Email);
+            if (user != null)
+            {
+                await _walletRepository.Add(user.Id);
+            }            
 
             //var userid = _authRepository.GetUserToken(tokenString);
 

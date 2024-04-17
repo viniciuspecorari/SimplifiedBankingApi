@@ -1,6 +1,6 @@
 ﻿namespace SimplifiedBankingApi.Models.Dto
 {
-    public record UserDto(string CompleteName, long Document, string Email, string Password, char Type)
+    public record UserDto(string CompleteName, string Document, string Email, string Password, char Type)
     {
         public static implicit operator UserDto(User entity)
         {

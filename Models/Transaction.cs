@@ -9,7 +9,7 @@
 
         // Relações
         public Guid PayerWalletId { get; set; }      
-        public Guid PayeeWalletId { get; set; }
+        public Guid payee { get; set; }
         public Wallet Wallet { get; set; }
 
     }

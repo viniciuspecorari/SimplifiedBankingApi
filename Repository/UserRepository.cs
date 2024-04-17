@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimplifiedBankingApi.Contracts;
 using SimplifiedBankingApi.Data;
+using SimplifiedBankingApi.Exceptions;
 using SimplifiedBankingApi.Models;
 using SimplifiedBankingApi.Models.Dto;
 
@@ -17,6 +18,7 @@ namespace SimplifiedBankingApi.Repository
 
         public async Task Add(UserDto userDto)
         {
+            
             var newUser = new User
             {
                 CompleteName = userDto.CompleteName,
@@ -28,7 +30,8 @@ namespace SimplifiedBankingApi.Repository
             };
 
             await _context.Users.AddAsync(newUser);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();            
+
         }
 
         public async Task<UserLoginDto> GetByEmail(string email)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimplifiedBankingApi.Data;
 
@@ -11,9 +12,11 @@ using SimplifiedBankingApi.Data;
 namespace SimplifiedBankingApi.Migrations
 {
     [DbContext(typeof(BankContext))]
-    partial class BankContextModelSnapshot : ModelSnapshot
+    [Migration("20240417154253_transactions_payee")]
+    partial class transactions_payee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

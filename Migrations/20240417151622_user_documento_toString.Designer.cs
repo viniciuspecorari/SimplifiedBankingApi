@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimplifiedBankingApi.Data;
 
@@ -11,9 +12,11 @@ using SimplifiedBankingApi.Data;
 namespace SimplifiedBankingApi.Migrations
 {
     [DbContext(typeof(BankContext))]
-    partial class BankContextModelSnapshot : ModelSnapshot
+    [Migration("20240417151622_user_documento_toString")]
+    partial class user_documento_toString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,18 +35,18 @@ namespace SimplifiedBankingApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("PayeeWalletId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("PayerWalletId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("payee")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("payee");
+                    b.HasIndex("PayeeWalletId");
 
                     b.ToTable("Transactions");
                 });
@@ -117,7 +120,7 @@ namespace SimplifiedBankingApi.Migrations
                 {
                     b.HasOne("SimplifiedBankingApi.Models.Wallet", "Wallet")
                         .WithMany("Transactions")
-                        .HasForeignKey("payee")
+                        .HasForeignKey("PayeeWalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

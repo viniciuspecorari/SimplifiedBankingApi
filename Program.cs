@@ -73,6 +73,8 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddDbContext<BankContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SimplifiedBankingDB"));

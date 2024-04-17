@@ -17,7 +17,8 @@ namespace SimplifiedBankingApi.Controllers
             _authRepository = authRepository;
         }
 
-        [HttpPost("login", Name = "login")]
+        [HttpPost]
+        [Route("/api/auth/login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Auth>> Login(LoginDto login)
