@@ -8,6 +8,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SimplifiedBankingApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SimplifiedBankingApi.Repository
 {
@@ -15,12 +16,14 @@ namespace SimplifiedBankingApi.Repository
     {
         private readonly BankContext _context;
         private readonly IWalletRepository _walletRepository;
+        private readonly IRabbitMqRepository _rabbitMqRepository;
         static readonly HttpClient httpClient = new HttpClient();
 
-        public TransactionRepository(BankContext bankContext, IWalletRepository walletRepository)
+        public TransactionRepository(BankContext bankContext, IWalletRepository walletRepository, IRabbitMqRepository rabbitMqRepository)
         {
             _context = bankContext;
             _walletRepository = walletRepository;
+            _rabbitMqRepository = rabbitMqRepository;
         }
 
         public async Task Transacting(UserAuthTransactionDto transaction, Guid walletId)
@@ -56,14 +59,17 @@ namespace SimplifiedBankingApi.Repository
 
                 // Registrar transação
                 var newTransaction = new TransactionDto(transaction.Value, walletId, transaction.payee);
-                await Add(newTransaction);
+                var transactionId = await Add(newTransaction);
 
                 // Enviar notificação aos clientes
+                var transactionNotifyEmail = await PayeeNotify(transactionId);
+                _rabbitMqRepository.SendingEmail(transactionNotifyEmail);
+
             }
 
         }
 
-        public async Task Add(TransactionDto transaction)
+        public async Task<Guid> Add(TransactionDto transaction)
         {
             var newTransaction = new Transaction
             {
@@ -73,9 +79,12 @@ namespace SimplifiedBankingApi.Repository
                 payee = transaction.payee
 
             };
-
+            
             await _context.Transactions.AddAsync(newTransaction);
             await _context.SaveChangesAsync();
+
+
+            return newTransaction.Id;
         }
 
         public async Task<bool> CheckAuthorization()
@@ -93,8 +102,27 @@ namespace SimplifiedBankingApi.Repository
                 return true;
             }
             return false;
-
               
+        }
+
+        public async Task<TransactionNotifyEmailDto> PayeeNotify(Guid transactionId)
+        {
+            var notify = from transaction in _context.Transactions
+                         where transaction.Id == transactionId
+                         join wallet in _context.Wallets on transaction.PayerWalletId equals wallet.Id
+                         join wallet2 in _context.Wallets on transaction.payee equals wallet2.Id
+                         join user in _context.Users on wallet.UserId equals user.Id
+                         join user2 in _context.Users on wallet2.UserId equals user2.Id
+                         select new TransactionNotifyEmailDto(
+
+                               transaction.Id
+                             , user.CompleteName // Nome do pagador
+                             , user2.Email // E-mail do beneficiario
+                             , transaction.Value
+                             , transaction.CreatedAt
+                             );
+
+            return notify.ToList().FirstOrDefault();
         }
     }
 }
