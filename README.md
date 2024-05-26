@@ -12,3 +12,4 @@ Para este projeto estou aplicando os seguintes conceitos e stacks:
 * LINQ
 * Autenticação e Autorização com JWT Tokens
 * Banco de dados com SQL Server
+* RabbitMq para envios de e-mail após a transação
